@@ -160,7 +160,42 @@ void *list_pop_back(List *pl) {
 /*<START_CODE>*/
 
 void *list_pop_min(List *pl, int (*ele_cmp)(const void *, const void *)) {
-  return NULL; /* Substitute this line by the function implementation. */
+  Node *aux = NULL, *prev_aux = NULL;
+  Node *min = NULL, *min_prev = NULL;
+  void *elem = NULL;
+
+  if(!pl || !ele_cmp){
+    return NULL;
+  }
+
+  if(list_is_empty(pl) == TRUE){
+    return NULL;
+  }
+
+  min = pl->first;
+  aux = pl->first;
+
+  /*Buscamos el minimo de la lista*/
+  while (aux != NULL){
+    if(ele_cmp(aux->info, min->info) < 0){
+      min = aux;
+      min_prev = prev_aux;
+    }
+    prev_aux = aux;
+    aux = aux->next;
+  }
+
+  /*Borramos el minimo de la lista*/
+  if(min_prev == NULL){
+    pl->first = min->next;
+  } else {
+    min_prev->next = min->next;
+  }
+
+  /*Copiamos la informacion y liberamos el nodo*/
+  elem = min->info;
+  free(min);
+  return elem;
 }
 
 /*<END_CODE>*/
