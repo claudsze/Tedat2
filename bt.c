@@ -155,8 +155,28 @@ Node *_bt_build_complete_rec(int depth, void **elements, int *counter) {
 
 /*<START_CODE>*/
 
+Node *_bt_prune_rec(Node *node, int max_depth);
+
 Status bt_prune(BT *pt, int max_depth) {
-  return ERROR; /* Substitute this line by the function implementation. */
+  if(!pt || max_depth<0) return ERROR;
+
+  root(pt) = _bt_prune_rec(root(pt), max_depth);
+
+  return OK;
+}
+
+Node *_bt_prune_rec(Node *node, int max_depth){
+  if(!node) return NULL;
+
+  if (max_depth < 0){
+    _bt_free_rec(node);
+    return NULL;
+  } else {
+    left(node) = _bt_prune_rec(left(node), max_depth - 1);
+    right(node) = _bt_prune_rec(right(node), max_depth - 1);
+  }
+
+  return node;
 }
 
 /*<END_CODE>*/
